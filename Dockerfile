@@ -11,6 +11,8 @@ RUN apt-get update && apt-get install -y \
     curl \
     git \
     libpq-dev \
+    procps \
+    wget \
     && rm -rf /var/lib/apt/lists/*
 
 COPY requirements.txt .
