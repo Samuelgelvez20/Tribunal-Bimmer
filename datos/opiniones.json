@@ -1,0 +1,192 @@
+{
+  "version": 1,
+  "opiniones": [
+    {
+      "id": "e32c622a-7363-4f02-a3e7-53181108d858",
+      "fecha_utc": "2026-11-06T10:00:00+00:00",
+      "jugador_id": "j001",
+      "jugador_nombre": "Lionel Messi",
+      "opinion_original": "Su visión de juego y precisión en los pases son de otro planeta.",
+      "sentimiento": "positivo",
+      "razon": "El aficionado elogia la visión de juego y la precisión en los pases del futbolista.",
+      "modelo": "gpt-4o-mini",
+      "version_prompt": "1.0"
+    },
+    {
+      "id": "4a71bfb5-cf70-4f5a-8b1e-089c1d9b3e10",
+      "fecha_utc": "2026-11-06T10:05:00+00:00",
+      "jugador_id": "j001",
+      "jugador_nombre": "Lionel Messi",
+      "opinion_original": "En varios partidos decisivos se le vio caminando y sin presionar la salida rival.",
+      "sentimiento": "negativo",
+      "razon": "La opinión critica la falta de presión e intensidad del jugador en momentos clave.",
+      "modelo": "gpt-4o-mini",
+      "version_prompt": "1.0"
+    },
+    {
+      "id": "7f8b9c1d-2e3f-4a5b-6c7d-8e9f0a1b2c3d",
+      "fecha_utc": "2026-11-06T10:10:00+00:00",
+      "jugador_id": "j001",
+      "jugador_nombre": "Lionel Messi",
+      "opinion_original": "Es un futbolista argentino que se desempeña como delantero o mediapunta ofensivo.",
+      "sentimiento": "neutro",
+      "razon": "El texto aporta una descripción fáctica y biográfica sobre la posición y nacionalidad del jugador.",
+      "modelo": "gpt-4o-mini",
+      "version_prompt": "1.0"
+    },
+    {
+      "id": "9a0b1c2d-3e4f-5a6b-7c8d-9e0f1a2b3c4d",
+      "fecha_utc": "2026-11-06T10:15:00+00:00",
+      "jugador_id": "j001",
+      "jugador_nombre": "Lionel Messi",
+      "opinion_original": "Tiene un talento descomunal con el balón, pero defensivamente no aporta casi nada al equipo.",
+      "sentimiento": "mixto",
+      "razon": "El comentario combina elogios a su talento ofensivo con críticas a su aporte defensivo.",
+      "modelo": "gpt-4o-mini",
+      "version_prompt": "1.0"
+    },
+    {
+      "id": "1b2c3d4e-5f6a-7b8c-9d0e-1f2a3b4c5d6e",
+      "fecha_utc": "2026-11-06T10:20:00+00:00",
+      "jugador_id": "j002",
+      "jugador_nombre": "Cristiano Ronaldo",
+      "opinion_original": "Su ética de trabajo y capacidad goleadora en momentos de máxima presión son inigualables.",
+      "sentimiento": "positivo",
+      "razon": "La opinión resalta con admiración la disciplina y efectividad goleadora del delantero.",
+      "modelo": "gpt-4o-mini",
+      "version_prompt": "1.0"
+    },
+    {
+      "id": "2c3d4e5f-6a7b-8c9d-0e1f-2a3b4c5d6e7f",
+      "fecha_utc": "2026-11-06T10:25:00+00:00",
+      "jugador_id": "j002",
+      "jugador_nombre": "Cristiano Ronaldo",
+      "opinion_original": "A veces peca de individualista y muestra frustración excesiva con sus compañeros.",
+      "sentimiento": "negativo",
+      "razon": "El aficionado critica actitudes individualistas y gestos de reproche hacia sus compañeros.",
+      "modelo": "gpt-4o-mini",
+      "version_prompt": "1.0"
+    },
+    {
+      "id": "3d4e5f6a-7b8c-9d0e-1f2a-3b4c5d6e7f8a",
+      "fecha_utc": "2026-11-06T10:30:00+00:00",
+      "jugador_id": "j002",
+      "jugador_nombre": "Cristiano Ronaldo",
+      "opinion_original": "Es el capitán de la selección de Portugal y juega con el dorsal número 7.",
+      "sentimiento": "neutro",
+      "razon": "El texto expone datos netamente informativos sobre su capitanía y dorsal.",
+      "modelo": "gpt-4o-mini",
+      "version_prompt": "1.0"
+    },
+    {
+      "id": "4e5f6a7b-8c9d-0e1f-2a3b-4c5d6e7f8a9b",
+      "fecha_utc": "2026-11-06T10:35:00+00:00",
+      "jugador_id": "j002",
+      "jugador_nombre": "Cristiano Ronaldo",
+      "opinion_original": "Un cabeceador y definidor letal, aunque en el juego asociativo participa cada vez menos.",
+      "sentimiento": "mixto",
+      "razon": "El aficionado valora su capacidad de remate pero señala limitaciones en la creación de juego colectivo.",
+      "modelo": "gpt-4o-mini",
+      "version_prompt": "1.0"
+    },
+    {
+      "id": "5f6a7b8c-9d0e-1f2a-3b4c-5d6e7f8a9b0c",
+      "fecha_utc": "2026-11-06T10:40:00+00:00",
+      "jugador_id": "j006",
+      "jugador_nombre": "Vinícius Júnior",
+      "opinion_original": "Su aceleración y regate en el uno contra uno desestabilizan a cualquier defensa del mundo.",
+      "sentimiento": "positivo",
+      "razon": "La opinión destaca con elogios el desequilibrio, velocidad y habilidad de regate del extremo.",
+      "modelo": "gpt-4o-mini",
+      "version_prompt": "1.0"
+    },
+    {
+      "id": "6a7b8c9d-0e1f-2a3b-4c5d-6e7f8a9b0c1d",
+      "fecha_utc": "2026-11-06T10:45:00+00:00",
+      "jugador_id": "j006",
+      "jugador_nombre": "Vinícius Júnior",
+      "opinion_original": "Se distrae constantemente provocando a las gradas y pierde la concentración en el juego.",
+      "sentimiento": "negativo",
+      "razon": "El comentario expresa inconformidad con las desconcentraciones y actitudes polémicas en la cancha.",
+      "modelo": "gpt-4o-mini",
+      "version_prompt": "1.0"
+    },
+    {
+      "id": "7b8c9d0e-1f2a-3b4c-5d6e-7f8a9b0c1d2e",
+      "fecha_utc": "2026-11-06T10:50:00+00:00",
+      "jugador_id": "j006",
+      "jugador_nombre": "Vinícius Júnior",
+      "opinion_original": "Inició su trayectoria profesional en las categorías juveniles del fútbol brasileño.",
+      "sentimiento": "neutro",
+      "razon": "El texto contiene un dato histórico y biográfico sobre sus inicios deportivos.",
+      "modelo": "gpt-4o-mini",
+      "version_prompt": "1.0"
+    },
+    {
+      "id": "8c9d0e1f-2a3b-4c5d-6e7f-8a9b0c1d2e3f",
+      "fecha_utc": "2026-11-06T10:55:00+00:00",
+      "jugador_id": "j006",
+      "jugador_nombre": "Vinícius Júnior",
+      "opinion_original": "Genera ocasiones increíbles por la banda izquierda, pero a menudo toma malas decisiones al definir.",
+      "sentimiento": "mixto",
+      "razon": "Se reconocen sus virtudes de desborde junto con señalamientos críticos respecto a su definición.",
+      "modelo": "gpt-4o-mini",
+      "version_prompt": "1.0"
+    },
+    {
+      "id": "9d0e1f2a-3b4c-5d6e-7f8a-9b0c1d2e3f4a",
+      "fecha_utc": "2026-11-06T11:00:00+00:00",
+      "jugador_id": "j013",
+      "jugador_nombre": "Luis Díaz",
+      "opinion_original": "Su entrega física y desmarque constante le dan una energía enorme a la ofensiva.",
+      "sentimiento": "positivo",
+      "razon": "La opinión elogia el despliegue físico y el dinamismo ofensivo del futbolista colombiano.",
+      "modelo": "gpt-4o-mini",
+      "version_prompt": "1.0"
+    },
+    {
+      "id": "0e1f2a3b-4c5d-6e7f-8a9b-0c1d2e3f4a5b",
+      "fecha_utc": "2026-11-06T11:05:00+00:00",
+      "jugador_id": "j013",
+      "jugador_nombre": "Luis Díaz",
+      "opinion_original": "Qué puntería tan fina: mandó tres remates claros a la tribuna sin portero.",
+      "sentimiento": "negativo",
+      "razon": "El aficionado critica de forma irónica las fallas de definición frente al arco.",
+      "modelo": "gpt-4o-mini",
+      "version_prompt": "1.0"
+    },
+    {
+      "id": "1f2a3b4c-5d6e-7f8a-9b0c-1d2e3f4a5b6c",
+      "fecha_utc": "2026-11-06T11:10:00+00:00",
+      "jugador_id": "j013",
+      "jugador_nombre": "Luis Díaz",
+      "opinion_original": "Futbolista nacido en Barrancas, departamento de La Guajira en Colombia.",
+      "sentimiento": "neutro",
+      "razon": "El enunciado aporta información geográfica y de procedencia del deportista.",
+      "modelo": "gpt-4o-mini",
+      "version_prompt": "1.0"
+    },
+    {
+      "id": "2a3b4c5d-6e7f-8a9b-0c1d-2e3f4a5b6c7d",
+      "fecha_utc": "2026-11-06T11:15:00+00:00",
+      "jugador_id": "j013",
+      "jugador_nombre": "Luis Díaz",
+      "opinion_original": "Gran desborde y valentía para encarar, pero le falta serenidad para elegir el último pase.",
+      "sentimiento": "mixto",
+      "razon": "El comentario aplaude su atrevimiento en el regate pero critica su toma de decisiones al asistir.",
+      "modelo": "gpt-4o-mini",
+      "version_prompt": "1.0"
+    },
+    {
+      "id": "8c8ecb7c-089b-4bbc-8427-ee2f1181ae74",
+      "fecha_utc": "2026-11-06T12:50:36.783191+00:00",
+      "jugador_id": "j006",
+      "jugador_nombre": "Vinícius Júnior",
+      "opinion_original": "Me parece que no es tan bueno porque es de brasil",
+      "sentimiento": "negativo",
+      "razon": "El aficionado desmerece la calidad deportiva del futbolista basándose en un sesgo sobre su país de origen.",
+      "modelo": "gemini-3.8-flash",
+      "version_prompt": "1.0"
+    }
+  ]
+}
