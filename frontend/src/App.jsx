@@ -3,12 +3,12 @@ import Header from './components/Header';
 import PlayerList from './components/Sidebar/PlayerList';
 import ChatView from './components/Chat/ChatView';
 import ConsultasView from './components/Consultas/ConsultasView';
-import { getJugadores, analizarOpinion } from './services/api';
+import { getModelos, analizarOpinion } from './services/api';
 
 export default function App() {
   const [tabActiva, setTabActiva] = useState('chat');
-  const [jugadores, setJugadores] = useState([]);
-  const [jugadorSeleccionado, setJugadorSeleccionado] = useState(null);
+  const [modelos, setModelos] = useState([]);
+  const [modeloSeleccionado, setModeloSeleccionado] = useState(null);
   const [mensajes, setMensajes] = useState([]);
   const [cargando, setCargando] = useState(false);
   const [error, setError] = useState(null);
@@ -16,29 +16,30 @@ export default function App() {
   useEffect(() => {
     async function cargar() {
       try {
-        const lista = await getJugadores();
-        setJugadores(lista);
+        const lista = await getModelos();
+        setModelos(lista);
         if (lista.length > 0) {
-          setJugadorSeleccionado(lista[0]);
+          setModeloSeleccionado(lista[0]);
         }
       } catch (err) {
-        setError('No se pudo conectar con el catálogo de jugadores.');
+        setError('No se pudo conectar con el catálogo de modelos BMW.');
       }
     }
     cargar();
   }, []);
 
   const handleEnviarMensaje = async (texto) => {
-    if (!jugadorSeleccionado) return;
+    if (!modeloSeleccionado) return;
 
-    // Capturar el jugador seleccionado en el momento exacto del envío
-    const jugadorActual = jugadorSeleccionado;
+    // Capturar el modelo seleccionado en el momento exacto del envío
+    const modeloActual = modeloSeleccionado;
+    const nombreModelo = modeloActual.modelo || modeloActual.nombre;
 
     // Agregar mensaje del usuario a la sesión
     const mensajeUsuario = {
       tipo: 'usuario',
-      jugador_id: jugadorActual.id,
-      jugador_nombre: jugadorActual.nombre,
+      jugador_id: modeloActual.id,
+      jugador_nombre: nombreModelo,
       contenido: texto.trim(),
     };
 
@@ -47,12 +48,12 @@ export default function App() {
     setError(null);
 
     try {
-      const data = await analizarOpinion(jugadorActual.id, texto.trim());
+      const data = await analizarOpinion(modeloActual.id, texto.trim());
 
       const mensajeAsistente = {
         tipo: 'asistente',
-        jugador_id: jugadorActual.id,
-        jugador_nombre: jugadorActual.nombre,
+        jugador_id: modeloActual.id,
+        jugador_nombre: nombreModelo,
         es_pertinente: data.es_pertinente,
         sentimiento: data.sentimiento,
         razon: data.razon,
@@ -73,23 +74,23 @@ export default function App() {
   };
 
   return (
-    <div className="flex flex-col h-screen w-screen overflow-hidden bg-[#080c14]">
+    <div className="flex flex-col h-screen w-screen overflow-hidden bg-[#0A0D12]">
       {/* Header Superior */}
       <Header tabActiva={tabActiva} onCambiarTab={setTabActiva} />
 
       {/* Contenido Principal */}
       <div className="flex flex-1 overflow-hidden">
-        {/* Sidebar izquierdo (lista de jugadores) */}
+        {/* Sidebar izquierdo (lista de modelos BMW con filtros por Tipo y Año) */}
         <PlayerList
-          jugadores={jugadores}
-          jugadorSeleccionado={jugadorSeleccionado}
-          onSeleccionarJugador={setJugadorSeleccionado}
+          jugadores={modelos}
+          jugadorSeleccionado={modeloSeleccionado}
+          onSeleccionarJugador={setModeloSeleccionado}
         />
 
         {/* Vista dinámica (Chat o Consultas) */}
         {tabActiva === 'chat' ? (
           <ChatView
-            jugadorSeleccionado={jugadorSeleccionado}
+            jugadorSeleccionado={modeloSeleccionado}
             mensajes={mensajes}
             onEnviarMensaje={handleEnviarMensaje}
             onLimpiarConversacion={handleLimpiarConversacion}
@@ -97,10 +98,9 @@ export default function App() {
             error={error}
           />
         ) : (
-          <ConsultasView jugadores={jugadores} />
+          <ConsultasView jugadores={modelos} />
         )}
       </div>
     </div>
   );
 }
-

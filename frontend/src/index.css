@@ -2,33 +2,80 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-  background-color: #080c14;
+:root {
+  /* BMW M Accent Palette */
+  --bimmer-blue-light: #0096D6;
+  --bimmer-blue-dark:  #00205B;
+  --bimmer-red:        #E00034;
+
+  /* Surface & Background */
+  --bg-obsidian:       #0A0D12;
+  --bg-card:           #121620;
+  --border-steel:      #1E2638;
+
+  /* Typography */
+  --text-primary:      #FFFFFF;
+  --text-secondary:    #94A3B8;
+
+  /* Gradiente icónico M Badge */
+  --m-stripe-gradient: linear-gradient(
+    90deg, 
+    #0096D6 0%, 
+    #00205B 50%, 
+    #E00034 100%
+  );
 }
 
-/* Custom Scrollbar */
+body {
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  background-color: var(--bg-obsidian);
+  color: var(--text-primary);
+}
+
+/* Custom Scrollbar BMW M Dark */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #0d131f;
+  background: var(--bg-obsidian);
 }
 ::-webkit-scrollbar-thumb {
-  background: #1f293d;
+  background: var(--border-steel);
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #2d3b55;
+  background: var(--bimmer-blue-light);
 }
 
-@keyframes pulse-subtle {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.85; transform: scale(1.02); }
+/* Franja M icónica */
+.m-stripe {
+  background: var(--m-stripe-gradient);
 }
 
-.animate-pulse-subtle {
-  animation: pulse-subtle 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+/* Badges con la paleta de colores M */
+.badge-bmw-deportivo {
+  background: rgba(224, 0, 52, 0.15);
+  color: #ff4d6d;
+  border: 1px solid rgba(224, 0, 52, 0.4);
 }
-
+.badge-bmw-semideportivo {
+  background: rgba(0, 150, 214, 0.15);
+  color: #38bdf8;
+  border: 1px solid rgba(0, 150, 214, 0.4);
+}
+.badge-bmw-sedan {
+  background: rgba(0, 32, 91, 0.35);
+  color: #93c5fd;
+  border: 1px solid rgba(0, 150, 214, 0.3);
+}
+.badge-bmw-familiar {
+  background: rgba(148, 163, 184, 0.15);
+  color: #cbd5e1;
+  border: 1px solid rgba(148, 163, 184, 0.3);
+}
+.badge-bmw-compacto {
+  background: rgba(168, 85, 247, 0.15);
+  color: #c084fc;
+  border: 1px solid rgba(168, 85, 247, 0.3);
+}

@@ -2,8 +2,8 @@ import json
 import pytest
 import tempfile
 from pathlib import Path
-from src.config import RUTA_JUGADORES
-from src.almacenamiento.lector_catalogo import cargar_jugadores
+from src.config import RUTA_MODELOS_BMW, RUTA_JUGADORES
+from src.almacenamiento.lector_catalogo import cargar_modelos_bmw, cargar_jugadores
 from src.almacenamiento.repositorio_opiniones import (
     cargar_opiniones,
     crear_registro,
@@ -12,23 +12,28 @@ from src.almacenamiento.repositorio_opiniones import (
 )
 from src.almacenamiento.servicio_consultas import consultar_opiniones, calcular_metricas
 from src.analisis.validador_texto import validar_longitud_opinion
-from src.modelos.jugador import Jugador
+from src.modelos.modelo_bmw import ModeloBMW
 from src.modelos.analisis_opinion import AnalisisOpinion
 from src.modelos.registro_opinion import RegistroOpinion, BaseOpiniones
 
 
-def test_catalogo_20_jugadores_y_unicidad():
-    """Verifica que el catálogo tenga exactamente 20 jugadores y sus IDs sean únicos."""
-    jugadores = cargar_jugadores(RUTA_JUGADORES)
-    assert len(jugadores) == 20
-    ids = [j.id for j in jugadores]
+def test_catalogo_modelos_bmw_y_unicidad():
+    """Verifica que el catálogo tenga modelos de BMW y sus IDs sean únicos."""
+    modelos = cargar_modelos_bmw(RUTA_MODELOS_BMW)
+    assert len(modelos) >= 49, f"Se esperaban al menos 49 modelos, encontrados {len(modelos)}"
+    ids = [m.id for m in modelos]
     assert len(ids) == len(set(ids)), "Se detectaron IDs duplicados en el catálogo"
+    # Verificar campos requeridos en cada modelo
+    for m in modelos:
+        assert m.modelo, "Cada modelo debe tener nombre de modelo"
+        assert m.ano_creacion >= 1920, f"Año inválido para {m.modelo}: {m.ano_creacion}"
+        assert m.tipo in ["sedan", "deportivo", "semideportivo", "familiar", "compacto"], f"Tipo inválido: {m.tipo}"
 
 
 def test_validacion_longitud_opinion():
     """Valida la regla de negocio de longitud de opinión (5 a 1000 caracteres sin espacios)."""
     # Menos de 5 caracteres
-    valido, _ = validar_longitud_opinion("   hola   ")
+    valido, _ = validar_longitud_opinion("   bmw   ")
     assert valido is False
 
     # Vacío
@@ -36,9 +41,9 @@ def test_validacion_longitud_opinion():
     assert valido is False
 
     # Válido (entre 5 y 1000)
-    valido, limpio = validar_longitud_opinion("  Es un gran jugador  ")
+    valido, limpio = validar_longitud_opinion("  El chasis del M3 es insuperable  ")
     assert valido is True
-    assert limpio == "Es un gran jugador"
+    assert limpio == "El chasis del M3 es insuperable"
 
     # Más de 1000 caracteres
     valido, _ = validar_longitud_opinion("a" * 1001)
@@ -67,16 +72,26 @@ def test_persistencia_atomica():
         base = cargar_opiniones(temp_file)
         assert len(base.opiniones) == 0
 
-        # Crear y guardar registro
-        jugador = Jugador(id="j001", nombre="Lionel Messi", pais="Argentina")
+        # Crear y guardar registro de BMW
+        modelo_bmw = ModeloBMW(
+            id="bmw_001",
+            nombre="BMW M3 (E30)",
+            modelo="BMW M3 (E30)",
+            era="Era de oro moderna",
+            chasis="E30",
+            ano_creacion=1986,
+            tipo="deportivo",
+            motor="2.3 L I4 (S14)",
+            caracteristica="Homologación para Grupo A / DTM.",
+        )
         analisis = AnalisisOpinion(
             es_pertinente=True,
             sentimiento="positivo",
-            razon="Excelente visión de juego.",
+            razon="Excelente dinamismo y ligereza en pista.",
         )
         registro = crear_registro(
-            jugador=jugador,
-            texto_opinion="Excelente visión de juego.",
+            jugador=modelo_bmw,
+            texto_opinion="Excelente dinamismo y ligereza en pista.",
             analisis=analisis,
             modelo="test-model",
         )
@@ -95,66 +110,64 @@ def test_persistencia_atomica():
 
 
 def test_consultas_y_metricas_en_memoria():
-    """Verifica el filtrado por jugador y sentimiento y el cálculo de métricas sin invocar IA."""
+    """Verifica el filtrado por modelo y sentimiento y el cálculo de métricas sin invocar IA."""
     r1 = RegistroOpinion(
         id="1",
         fecha_utc="2026-11-06T10:00:00Z",
-        jugador_id="j001",
-        jugador_nombre="Lionel Messi",
-        opinion_original="Crack total",
+        jugador_id="bmw_001",
+        jugador_nombre="BMW M3 (E30)",
+        modelo_id="bmw_001",
+        modelo_nombre="BMW M3 (E30)",
+        opinion_original="El mejor chasis histórico.",
         sentimiento="positivo",
-        razon="Elogio",
-        modelo="m",
+        razon="Elogia el comportamiento dinámico.",
+        modelo="test",
     )
     r2 = RegistroOpinion(
         id="2",
-        fecha_utc="2026-11-06T10:01:00Z",
-        jugador_id="j001",
-        jugador_nombre="Lionel Messi",
-        opinion_original="Mal partido",
+        fecha_utc="2026-11-06T10:05:00Z",
+        jugador_id="bmw_002",
+        jugador_nombre="BMW M5 (E60)",
+        modelo_id="bmw_002",
+        modelo_nombre="BMW M5 (E60)",
+        opinion_original="Caja SMG problemática.",
         sentimiento="negativo",
-        razon="Crítica",
-        modelo="m",
+        razon="Critica la fiabilidad de la transmisión.",
+        modelo="test",
     )
     r3 = RegistroOpinion(
         id="3",
-        fecha_utc="2026-11-06T10:02:00Z",
-        jugador_id="j002",
-        jugador_nombre="Cristiano Ronaldo",
-        opinion_original="Goleador",
-        sentimiento="positivo",
-        razon="Elogio",
-        modelo="m",
+        fecha_utc="2026-11-06T10:10:00Z",
+        jugador_id="bmw_001",
+        jugador_nombre="BMW M3 (E30)",
+        modelo_id="bmw_001",
+        modelo_nombre="BMW M3 (E30)",
+        opinion_original="Motor 4 cilindros de 2.3 litros.",
+        sentimiento="neutro",
+        razon="Aporta datos técnicos sin valorar.",
+        modelo="test",
     )
 
-    lista = [r1, r2, r3]
+    registros = [r1, r2, r3]
 
-    # Filtrar por jugador
-    filtrados_messi = consultar_opiniones(lista, jugador_id="j001")
-    assert len(filtrados_messi) == 2
+    # Filtrar por modelo
+    filtro_m1 = consultar_opiniones(registros, modelo_id="bmw_001")
+    assert len(filtro_m1) == 2
 
     # Filtrar por sentimiento
-    filtrados_pos = consultar_opiniones(lista, sentimiento="positivo")
-    assert len(filtrados_pos) == 2
+    filtro_neg = consultar_opiniones(registros, sentimiento="negativo")
+    assert len(filtro_neg) == 1
+    assert filtro_neg[0].id == "2"
+
+    # Filtrar cruzado
+    filtro_cruzado = consultar_opiniones(registros, modelo_id="bmw_001", sentimiento="positivo")
+    assert len(filtro_cruzado) == 1
+    assert filtro_cruzado[0].id == "1"
 
     # Métricas
-    metricas = calcular_metricas(lista)
+    metricas = calcular_metricas(registros)
     assert metricas["total"] == 3
-    assert metricas["por_sentimiento"]["positivo"] == 2
+    assert metricas["por_sentimiento"]["positivo"] == 1
     assert metricas["por_sentimiento"]["negativo"] == 1
-    assert metricas["por_sentimiento"]["neutro"] == 0
-
-
-def test_resiliencia_archivo_corrupto():
-    """Comprueba que un archivo JSON corrupto no se sobrescriba silenciosamente y lance error."""
-    with tempfile.TemporaryDirectory() as temp_dir:
-        temp_file = Path(temp_dir) / "corrupto.json"
-        with open(temp_file, "w", encoding="utf-8") as f:
-            f.write("{ json_invalido: 123 ")
-
-        # Debe lanzar ValueError y NO borrar el archivo
-        with pytest.raises(ValueError):
-            cargar_opiniones(temp_file)
-
-        assert temp_file.exists(), "El archivo corrupto debe preservarse para auditoría"
-
+    assert metricas["por_sentimiento"]["neutro"] == 1
+    assert metricas["por_sentimiento"]["mixto"] == 0

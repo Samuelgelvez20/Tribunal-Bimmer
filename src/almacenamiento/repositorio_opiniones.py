@@ -4,7 +4,8 @@ import tempfile
 import uuid
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import List, Union
+from typing import List, Optional, Union
+from src.modelos.modelo_bmw import ModeloBMW
 from src.modelos.jugador import Jugador
 from src.modelos.analisis_opinion import AnalisisOpinion
 from src.modelos.registro_opinion import RegistroOpinion, BaseOpiniones
@@ -41,23 +42,32 @@ def cargar_opiniones(ruta: Union[str, Path]) -> BaseOpiniones:
 
 
 def crear_registro(
-    jugador: Jugador,
-    texto_opinion: str,
-    analisis: AnalisisOpinion,
-    modelo: str,
+    jugador: Optional[Union[ModeloBMW, Jugador]] = None,
+    texto_opinion: str = "",
+    analisis: Optional[AnalisisOpinion] = None,
+    modelo: str = "default",
     version_prompt: str = "1.0",
+    modelo_bmw: Optional[Union[ModeloBMW, Jugador]] = None,
 ) -> RegistroOpinion:
     """
     Crea un nuevo registro de opinión con UUID, fecha UTC y metadatos.
     """
-    if not analisis.es_pertinente or analisis.sentimiento is None:
+    target = modelo_bmw or jugador
+    if target is None:
+        raise ValueError("Se debe proporcionar el modelo de BMW evaluado.")
+
+    if analisis is None or not analisis.es_pertinente or analisis.sentimiento is None:
         raise ValueError("No se puede crear un registro para una opinión no pertinente o sin sentimiento.")
+
+    target_nombre = getattr(target, "modelo", None) or getattr(target, "nombre", str(target))
 
     return RegistroOpinion(
         id=str(uuid.uuid4()),
         fecha_utc=datetime.now(timezone.utc).isoformat(),
-        jugador_id=jugador.id,
-        jugador_nombre=jugador.nombre,
+        jugador_id=target.id,
+        jugador_nombre=target_nombre,
+        modelo_id=target.id,
+        modelo_nombre=target_nombre,
         opinion_original=texto_opinion.strip(),
         sentimiento=analisis.sentimiento,
         razon=analisis.razon.strip(),
@@ -68,51 +78,39 @@ def crear_registro(
 
 def guardar_base_completa(ruta: Union[str, Path], base: BaseOpiniones) -> None:
     """
-    Guarda la base de opiniones completa de forma atómica en disco usando archivo temporal.
+    Escribe atómicamente la base completa en disco mediante archivo temporal y os.replace.
     """
     ruta_path = Path(ruta)
-    directorio = ruta_path.parent
-    directorio.mkdir(parents=True, exist_ok=True)
+    directorio_padre = ruta_path.parent
+    directorio_padre.mkdir(parents=True, exist_ok=True)
 
-    temp_path = None
+    with tempfile.NamedTemporaryFile("w", dir=directorio_padre, delete=False, encoding="utf-8") as temp_file:
+        nombre_temporal = temp_file.name
+        temp_file.write(base.model_dump_json(indent=2))
+        temp_file.flush()
+        os.fsync(temp_file.fileno())
+
+    # Asegurar permisos accesibles en el host y contenedor
     try:
-        with tempfile.NamedTemporaryFile(
-            mode="w",
-            dir=directorio,
-            delete=False,
-            encoding="utf-8",
-            prefix=".opiniones_tmp_",
-            suffix=".json",
-        ) as tmp:
-            temp_path = Path(tmp.name)
-            # Volcar datos con UTF-8 e indentación
-            json.dump(base.model_dump(), tmp, ensure_ascii=False, indent=2)
-            tmp.flush()
-            os.fsync(tmp.fileno())
+        os.chmod(nombre_temporal, 0o666)
+    except Exception:
+        pass
 
-        # Reemplazo atómico
-        os.replace(temp_path, ruta_path)
-    except Exception as e:
-        if temp_path and temp_path.exists():
-            try:
-                temp_path.unlink()
-            except Exception:
-                pass
-        raise IOError(f"Error durante la escritura atómica en {ruta_path}: {e}")
+    # Reemplazo atómico garantizado por el sistema operativo
+    os.replace(nombre_temporal, ruta_path)
 
 
 def guardar_opinion(ruta: Union[str, Path], registro: RegistroOpinion) -> BaseOpiniones:
     """
-    Agrega un registro a la base persistente sin perder los anteriores.
-    Previene duplicados por ID (idempotencia en reintentos).
+    Carga la base existente, añade el nuevo registro garantizando idempotencia por ID,
+    y persiste la base de manera atómica.
     """
     base = cargar_opiniones(ruta)
 
-    # Comprobar si el ID ya existe
+    # Idempotencia: si ya existe el ID, no lo duplica
     if any(op.id == registro.id for op in base.opiniones):
         return base
 
     base.opiniones.append(registro)
     guardar_base_completa(ruta, base)
     return base
-

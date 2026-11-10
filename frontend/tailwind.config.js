@@ -7,21 +7,23 @@ export default {
   theme: {
     extend: {
       colors: {
-        pitch: {
-          900: '#0b0f17',
-          800: '#111827',
-          700: '#1f2937',
-          600: '#374151',
+        bimmer: {
+          blue: {
+            light: '#0096D6',
+            dark: '#00205B',
+          },
+          red: '#E00034',
         },
-        accent: {
-          green: '#10b981',
-          red: '#ef4444',
-          yellow: '#f59e0b',
-          blue: '#3b82f6',
-        }
+        obsidian: '#0A0D12',
+        card: '#121620',
+        steel: '#1E2638',
+      },
+      backgroundImage: {
+        'm-stripe': 'linear-gradient(90deg, #0096D6 0%, #00205B 50%, #E00034 100%)',
+        'm-stripe-vertical': 'linear-gradient(180deg, #0096D6 0%, #00205B 50%, #E00034 100%)',
+        'm-badge-slant': 'linear-gradient(135deg, #0096D6 0%, #00205B 50%, #E00034 100%)',
       }
     },
   },
   plugins: [],
 }
-

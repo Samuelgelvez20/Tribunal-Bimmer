@@ -4,6 +4,8 @@ langchain-openai
 langchain-google-genai
 
 streamlit
+fastapi
+uvicorn
 
 psycopg[binary]
 SQLAlchemy

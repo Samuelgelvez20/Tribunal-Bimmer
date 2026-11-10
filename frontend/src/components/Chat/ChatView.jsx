@@ -1,29 +1,27 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Send, Trash2, Bot, User, AlertCircle, CheckCircle2, Sparkles } from 'lucide-react';
-
-const BANDERAS = {
-  "Argentina": "🇦🇷",
-  "Portugal": "🇵🇹",
-  "Brasil": "🇧🇷",
-  "Francia": "🇫🇷",
-  "Noruega": "🇳🇴",
-  "Egipto": "🇪🇬",
-  "Polonia": "🇵🇱",
-  "Croacia": "🇭🇷",
-  "Bélgica": "🇧🇪",
-  "Uruguay": "🇺🇾",
-  "Colombia": "🇨🇴",
-  "Corea del Sur": "🇰🇷",
-  "Senegal": "🇸🇳",
-};
+import {
+  Send,
+  Trash2,
+  Bot,
+  User,
+  AlertCircle,
+  CheckCircle2,
+  Sparkles,
+  Gauge,
+  Zap,
+  Timer,
+  Flame,
+  Info,
+  Car
+} from 'lucide-react';
 
 export default function ChatView({
-  jugadorSeleccionado,
+  jugadorSeleccionado: modeloSeleccionado,
   mensajes,
   onEnviarMensaje,
   onLimpiarConversacion,
   cargando,
-  error
+  error,
 }) {
   const [texto, setTexto] = useState('');
   const messagesEndRef = useRef(null);
@@ -45,153 +43,265 @@ export default function ChatView({
 
   const len = texto.trim().length;
   const esValido = len >= 5 && len <= 1000;
-  const bandera = BANDERAS[jugadorSeleccionado?.pais] || '⚽';
+
+  const modeloNombre =
+    modeloSeleccionado?.modelo || modeloSeleccionado?.nombre || 'BMW M Power';
+
+  // Sugerencias de opiniones automotrices
+  const sugerencias = [
+    `El empuje y sonido del motor ${modeloSeleccionado?.motor?.split('(')[0] || 'BMW'} transmiten una emoción inigualable en curva.`,
+    `Un modelo icónico con gran dinamismo, aunque su peso y costo de mantenimiento me dejan dudas.`,
+    `Fue fabricado en el año ${modeloSeleccionado?.ano_creacion || '1986'} con especificación de chasis ${modeloSeleccionado?.chasis || 'M'}.`,
+  ];
 
   return (
-    <div className="flex-1 flex flex-col h-full bg-[#0a0e17] overflow-hidden">
-      {/* Header del Chat */}
-      <div className="h-16 border-b border-slate-800 bg-[#0d131f]/90 backdrop-blur px-6 flex items-center justify-between z-10">
-        <div className="flex items-center gap-3">
-          <span className="text-2xl">{bandera}</span>
-          <div>
-            <div className="flex items-center gap-2">
-              <h2 className="font-bold text-white text-base">{jugadorSeleccionado?.nombre}</h2>
-              <span className="bg-emerald-500/10 text-emerald-400 text-[10px] font-bold px-2 py-0.5 rounded-full border border-emerald-500/20">
-                EN SESIÓN
-              </span>
+    <div className="flex-1 flex flex-col h-full bg-[#0A0D12] overflow-hidden">
+      {/* Header y Ficha Técnica del Modelo BMW */}
+      <div className="border-b border-[#1E2638] bg-[#0E121A] px-6 py-4 z-10 shadow-sm relative">
+        {/* Franja M Badge superior */}
+        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#0096D6] via-[#00205B] to-[#E00034]"></div>
+
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <div className="w-12 h-12 rounded-xl bg-[#121620] border border-[#1E2638] flex items-center justify-center text-white font-black italic shadow-inner">
+              <span className="text-[#0096D6] text-xl">///</span>
+              <span className="text-[#E00034] text-xl">M</span>
             </div>
-            <p className="text-xs text-slate-400">Opinando sobre el futbolista seleccionado</p>
+            <div>
+              <div className="flex flex-wrap items-center gap-2">
+                <h2 className="font-extrabold text-white text-lg tracking-tight">
+                  {modeloNombre}
+                </h2>
+                <span className="bg-[#0096D6]/15 text-[#0096D6] text-[10px] font-bold px-2.5 py-0.5 rounded-full border border-[#0096D6]/30">
+                  {modeloSeleccionado?.era || 'BMW Classic & Modern'}
+                </span>
+                {modeloSeleccionado?.chasis && (
+                  <span className="bg-[#00205B]/40 text-[#93c5fd] text-[10px] font-mono px-2 py-0.5 rounded border border-[#00205B]">
+                    Chasis: {modeloSeleccionado.chasis}
+                  </span>
+                )}
+              </div>
+              <p className="text-xs text-[#94A3B8] mt-0.5">
+                {modeloSeleccionado?.caracteristica || 'Modelo de altas prestaciones del fabricante bávaro'}
+              </p>
+            </div>
           </div>
+
+          {/* Botón limpiar sesión */}
+          <button
+            onClick={onLimpiarConversacion}
+            title="Reiniciar chat actual (los veredictos persisten en disco)"
+            className="self-start lg:self-center flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-[#94A3B8] hover:text-[#E00034] hover:bg-[#E00034]/10 border border-[#1E2638] hover:border-[#E00034]/30 transition-all"
+          >
+            <Trash2 className="w-3.5 h-3.5" />
+            <span>Nuevo Juicio</span>
+          </button>
         </div>
 
-        <button
-          onClick={onLimpiarConversacion}
-          title="Limpiar chat actual (las opiniones guardadas se conservan)"
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-slate-300 hover:text-rose-400 hover:bg-rose-500/10 border border-slate-700 hover:border-rose-500/30 transition-all"
-        >
-          <Trash2 className="w-3.5 h-3.5" />
-          <span>Nueva conversación</span>
-        </button>
+        {/* Barra de especificaciones técnicas (KPIs rápidos del auto) */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2 mt-3 pt-3 border-t border-[#1E2638]/70">
+          <div className="bg-[#121620] p-2 rounded-lg border border-[#1E2638]/80 text-center">
+            <span className="text-[10px] text-[#94A3B8] uppercase block">Potencia</span>
+            <span className="text-xs font-bold font-mono text-[#0096D6]">
+              {modeloSeleccionado?.caballos_fuerza ? `${modeloSeleccionado.caballos_fuerza} HP` : 'N/D'}
+            </span>
+          </div>
+
+          <div className="bg-[#121620] p-2 rounded-lg border border-[#1E2638]/80 text-center">
+            <span className="text-[10px] text-[#94A3B8] uppercase block">0-100 km/h</span>
+            <span className="text-xs font-bold font-mono text-[#E00034]">
+              {modeloSeleccionado?.aceleracion_0_100_kmh_s ? `${modeloSeleccionado.aceleracion_0_100_kmh_s} s` : 'N/D'}
+            </span>
+          </div>
+
+          <div className="bg-[#121620] p-2 rounded-lg border border-[#1E2638]/80 text-center">
+            <span className="text-[10px] text-[#94A3B8] uppercase block">Vel. Máxima</span>
+            <span className="text-xs font-bold font-mono text-white">
+              {modeloSeleccionado?.velocidad_maxima_kmh ? `${modeloSeleccionado.velocidad_maxima_kmh} km/h` : 'N/D'}
+            </span>
+          </div>
+
+          <div className="bg-[#121620] p-2 rounded-lg border border-[#1E2638]/80 text-center">
+            <span className="text-[10px] text-[#94A3B8] uppercase block">Torque</span>
+            <span className="text-xs font-bold font-mono text-slate-300">
+              {modeloSeleccionado?.torque_nm ? `${modeloSeleccionado.torque_nm} Nm` : 'N/D'}
+            </span>
+          </div>
+
+          <div className="bg-[#121620] p-2 rounded-lg border border-[#1E2638]/80 text-center">
+            <span className="text-[10px] text-[#94A3B8] uppercase block">Año</span>
+            <span className="text-xs font-bold font-mono text-slate-300">
+              {modeloSeleccionado?.ano_creacion || 'N/D'}
+            </span>
+          </div>
+
+          <div className="bg-[#121620] p-2 rounded-lg border border-[#1E2638]/80 text-center">
+            <span className="text-[10px] text-[#94A3B8] uppercase block">Carrocería</span>
+            <span className="text-xs font-bold uppercase text-[#0096D6] truncate block">
+              {modeloSeleccionado?.tipo || 'Turismo'}
+            </span>
+          </div>
+        </div>
       </div>
 
       {/* Área de Mensajes */}
       <div className="flex-1 overflow-y-auto p-6 space-y-6">
         {mensajes.length === 0 && (
-          <div className="h-full flex flex-col items-center justify-center text-center p-8 text-slate-400">
-            <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-emerald-500/20 to-blue-500/20 border border-slate-700 flex items-center justify-center text-3xl mb-4 animate-bounce">
-              ⚽
+          <div className="h-full flex flex-col items-center justify-center text-center p-8 text-[#94A3B8]">
+            <div className="w-16 h-16 rounded-2xl bg-[#121620] border border-[#1E2638] flex items-center justify-center text-3xl mb-4 relative overflow-hidden shadow-lg">
+              <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#0096D6] via-[#00205B] to-[#E00034]"></div>
+              <Car className="w-8 h-8 text-[#0096D6]" />
             </div>
-            <h3 className="text-lg font-bold text-slate-200 mb-1">
-              ¿Qué opinas sobre {jugadorSeleccionado?.nombre}?
+            <h3 className="text-lg font-bold text-white mb-1">
+              ¿Cuál es tu veredicto sobre el {modeloNombre}?
             </h3>
-            <p className="text-sm text-slate-400 max-w-md mb-4">
-              Escribe una crítica, elogio o análisis sobre su juego. El sistema evaluará el sentimiento con LangChain y lo registrará en la base de datos persistente.
+            <p className="text-sm text-[#94A3B8] max-w-lg mb-6">
+              Expresa tu crítica, elogio o análisis técnico sobre su comportamiento, motor o diseño. El Tribunal Bimmer evaluará la pertinencia y el sentimiento con LangChain LCEL.
             </p>
-            <div className="flex flex-wrap gap-2 justify-center max-w-lg">
-              <span className="text-xs bg-slate-800/80 border border-slate-700 px-3 py-1.5 rounded-full text-slate-300">
-                💡 Ejemplo: "Su visión de juego y precisión son extraordinarias"
+
+            {/* Sugerencias clicables */}
+            <div className="flex flex-col gap-2 max-w-xl w-full">
+              <span className="text-xs font-semibold text-[#94A3B8]/80 mb-1">
+                💡 Haz clic en una sugerencia o escribe tu propio juicio:
               </span>
-              <span className="text-xs bg-slate-800/80 border border-slate-700 px-3 py-1.5 rounded-full text-slate-300">
-                💡 Ejemplo: "Tiene calidad, pero su actitud me decepciona"
-              </span>
+              {sugerencias.map((sug, idx) => (
+                <button
+                  key={idx}
+                  onClick={() => setTexto(sug)}
+                  className="text-xs text-left bg-[#121620] hover:bg-[#1E2638] border border-[#1E2638] hover:border-[#0096D6]/40 p-2.5 rounded-xl text-slate-300 hover:text-white transition-all shadow-sm"
+                >
+                  "{sug}"
+                </button>
+              ))}
             </div>
           </div>
         )}
 
-        {mensajes.map((msg, index) => {
-          const esUsuario = msg.tipo === 'usuario';
-          return (
-            <div
-              key={index}
-              className={`flex gap-3.5 max-w-3xl ${esUsuario ? 'ml-auto flex-row-reverse' : 'mr-auto'}`}
-            >
-              {/* Avatar estilo captura */}
-              <div
-                className={`w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 text-white font-bold text-sm shadow-md ${
-                  esUsuario
-                    ? 'bg-rose-600/90 shadow-rose-950/40'
-                    : 'bg-amber-600/90 shadow-amber-950/40'
-                }`}
-              >
-                {esUsuario ? <User className="w-5 h-5" /> : <Bot className="w-5 h-5" />}
+        {mensajes.map((m, index) => {
+          if (m.tipo === 'usuario') {
+            return (
+              <div key={index} className="flex justify-end">
+                <div className="max-w-2xl bg-[#121620] border border-[#1E2638] rounded-2xl p-4 shadow-md">
+                  <div className="flex items-center gap-2 mb-1.5 text-xs text-[#94A3B8]">
+                    <User className="w-3.5 h-3.5 text-[#0096D6]" />
+                    <span className="font-semibold text-white">Entusiasta Bimmer</span>
+                    <span className="text-[10px] text-[#94A3B8]/60">• {m.jugador_nombre}</span>
+                  </div>
+                  <p className="text-sm text-slate-200 leading-relaxed whitespace-pre-wrap">
+                    {m.contenido}
+                  </p>
+                </div>
               </div>
+            );
+          }
 
-              {/* Contenido del mensaje */}
-              <div
-                className={`flex-1 rounded-2xl p-4 text-sm leading-relaxed border transition-all ${
-                  esUsuario
-                    ? 'bg-[#1a2333] border-slate-700/80 text-slate-100 shadow-lg'
-                    : 'bg-[#111723] border-slate-800 text-slate-200 shadow-xl'
-                }`}
-              >
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-xs font-bold text-slate-300">
-                    {msg.jugador_nombre}
-                  </span>
-                  {msg.tipo === 'asistente' && msg.es_pertinente && (
+          // Mensaje del Asistente / Tribunal
+          const esPertinente = m.es_pertinente;
+          const sent = m.sentimiento;
+
+          return (
+            <div key={index} className="flex justify-start">
+              <div className="max-w-2xl bg-[#0E121A] border border-[#1E2638] rounded-2xl p-5 shadow-lg relative overflow-hidden w-full">
+                {/* Franja vertical de veredicto */}
+                <div
+                  className={`absolute top-0 bottom-0 left-0 w-1.5 ${
+                    !esPertinente
+                      ? 'bg-amber-500'
+                      : sent === 'positivo'
+                      ? 'bg-emerald-500'
+                      : sent === 'negativo'
+                      ? 'bg-[#E00034]'
+                      : sent === 'mixto'
+                      ? 'bg-amber-400'
+                      : 'bg-[#0096D6]'
+                  }`}
+                />
+
+                <div className="flex items-center justify-between mb-3 pl-1">
+                  <div className="flex items-center gap-2">
+                    <div className="w-7 h-7 rounded-lg bg-[#121620] border border-[#1E2638] flex items-center justify-center">
+                      <Sparkles className="w-4 h-4 text-[#0096D6]" />
+                    </div>
+                    <div>
+                      <h4 className="text-xs font-bold text-white tracking-wide">
+                        Dictamen del Tribunal Bimmer
+                      </h4>
+                      <p className="text-[10px] text-[#94A3B8]">Análisis LCEL Determinista (t=0.0)</p>
+                    </div>
+                  </div>
+
+                  {/* Badge de Sentimiento */}
+                  {esPertinente && (
                     <span
-                      className={`text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full border ${
-                        msg.sentimiento === 'positivo'
+                      className={`text-[11px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full border ${
+                        sent === 'positivo'
                           ? 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30'
-                          : msg.sentimiento === 'negativo'
-                          ? 'bg-rose-500/15 text-rose-400 border-rose-500/30'
-                          : msg.sentimiento === 'mixto'
-                          ? 'bg-amber-500/15 text-amber-400 border-amber-500/30'
-                          : 'bg-slate-500/15 text-slate-300 border-slate-500/30'
+                          : sent === 'negativo'
+                          ? 'bg-[#E00034]/15 text-[#ff4d6d] border-[#E00034]/40'
+                          : sent === 'mixto'
+                          ? 'bg-amber-400/15 text-amber-300 border-amber-400/30'
+                          : 'bg-[#0096D6]/15 text-[#38bdf8] border-[#0096D6]/30'
                       }`}
                     >
-                      {msg.sentimiento}
+                      {sent === 'positivo' && '🟢 Sentimiento Favorable'}
+                      {sent === 'negativo' && '🔴 Sentimiento Crítico'}
+                      {sent === 'neutro' && '⚪ Descriptivo / Fáctico'}
+                      {sent === 'mixto' && '🟡 Juicio Mixto'}
                     </span>
                   )}
                 </div>
 
-                {esUsuario ? (
-                  <p className="text-slate-100 font-medium">{msg.contenido}</p>
-                ) : msg.es_pertinente ? (
-                  <div className="space-y-2">
-                    <p className="text-emerald-400 font-semibold flex items-center gap-1.5">
-                      <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                      Opinión guardada. Sentimiento estimado: <span className="underline decoration-emerald-500/50">{msg.sentimiento}</span>.
-                    </p>
-                    <p className="text-slate-200 bg-black/20 p-2.5 rounded-lg border border-slate-800">
-                      {msg.razon}
-                    </p>
-                    <div className="pt-1 text-[11px] font-mono text-slate-400 flex items-center gap-1">
-                      <span>Registro:</span>
-                      <code className="text-slate-300 bg-slate-800/80 px-1.5 py-0.5 rounded select-all">
-                        {msg.id_registro}
-                      </code>
-                    </div>
+                {/* Justificación en tercera persona */}
+                <div className="bg-[#121620] p-3.5 rounded-xl border border-[#1E2638] mb-3 ml-1">
+                  <p className="text-xs text-slate-300 leading-relaxed font-sans">
+                    <span className="font-semibold text-white">Justificación Analítica: </span>
+                    {m.razon}
+                  </p>
+                </div>
+
+                {/* Estado de Persistencia */}
+                <div className="flex items-center justify-between text-[11px] text-[#94A3B8] pt-1 pl-1">
+                  <div className="flex items-center gap-1.5">
+                    {esPertinente ? (
+                      <>
+                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                        <span className="text-emerald-400 font-medium">
+                          Registrado en Base de Datos de Opiniones
+                        </span>
+                      </>
+                    ) : (
+                      <>
+                        <AlertCircle className="w-3.5 h-3.5 text-amber-400" />
+                        <span className="text-amber-400 font-medium">
+                          No Pertinente (Rechazado sin guardar)
+                        </span>
+                      </>
+                    )}
                   </div>
-                ) : (
-                  <div className="space-y-1.5 text-rose-300">
-                    <p className="font-semibold flex items-center gap-1.5 text-rose-400">
-                      <AlertCircle className="w-4 h-4 text-rose-400" />
-                      Opinión rechazada (No pertinente al futbolista)
-                    </p>
-                    <p className="text-xs text-slate-300">{msg.razon}</p>
-                    <p className="text-[11px] text-slate-500 italic">No se guardó ningún registro en la base de datos.</p>
-                  </div>
-                )}
+                  {m.id_registro && (
+                    <span className="font-mono text-[10px] text-[#94A3B8]/70">
+                      ID: {m.id_registro.substring(0, 8)}...
+                    </span>
+                  )}
+                </div>
               </div>
             </div>
           );
         })}
 
         {cargando && (
-          <div className="flex gap-3.5 max-w-3xl mr-auto">
-            <div className="w-9 h-9 rounded-xl bg-amber-600/90 flex items-center justify-center text-white shadow-md">
-              <Bot className="w-5 h-5 animate-spin" />
-            </div>
-            <div className="bg-[#111723] border border-slate-800 rounded-2xl p-4 text-sm text-slate-300 flex items-center gap-2">
-              <Sparkles className="w-4 h-4 text-emerald-400 animate-pulse" />
-              <span>Analizando con LangChain y evaluando pertinencia...</span>
+          <div className="flex justify-start">
+            <div className="bg-[#0E121A] border border-[#1E2638] rounded-2xl p-4 flex items-center gap-3">
+              <div className="w-6 h-6 border-2 border-[#0096D6] border-t-transparent rounded-full animate-spin" />
+              <span className="text-xs text-[#94A3B8]">
+                El Tribunal está deliberando con el modelo de IA...
+              </span>
             </div>
           </div>
         )}
 
         {error && (
-          <div className="p-3 bg-rose-500/10 border border-rose-500/30 rounded-xl text-rose-300 text-xs flex items-center gap-2">
+          <div className="bg-[#E00034]/15 border border-[#E00034]/30 rounded-xl p-3 flex items-center gap-2 text-xs text-[#ff4d6d]">
             <AlertCircle className="w-4 h-4 flex-shrink-0" />
             <span>{error}</span>
           </div>
@@ -200,44 +310,42 @@ export default function ChatView({
         <div ref={messagesEndRef} />
       </div>
 
-      {/* Input Formulario */}
-      <div className="p-4 bg-[#0d131f] border-t border-slate-800">
-        <form onSubmit={handleSubmit} className="relative max-w-4xl mx-auto">
-          <input
-            type="text"
-            value={texto}
-            onChange={(e) => setTexto(e.target.value)}
-            placeholder={`Escribe una opinión sobre ${jugadorSeleccionado?.nombre} (5 a 1000 caracteres)...`}
-            disabled={cargando}
-            className="w-full bg-[#141b2a] border border-slate-700 rounded-xl pl-4 pr-28 py-3.5 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all"
-          />
-
-          <div className="absolute right-2.5 top-2.5 flex items-center gap-2">
-            <span
-              className={`text-[11px] font-mono px-2 py-0.5 rounded ${
-                len > 0 && !esValido
-                  ? 'text-rose-400 bg-rose-500/10'
-                  : 'text-slate-400 bg-slate-800/80'
-              }`}
-            >
-              {len}/1000
-            </span>
-
+      {/* Formulario de Entrada */}
+      <div className="p-4 border-t border-[#1E2638] bg-[#0E121A]">
+        <form onSubmit={handleSubmit} className="max-w-4xl mx-auto space-y-2">
+          <div className="relative">
+            <textarea
+              value={texto}
+              onChange={(e) => setTexto(e.target.value)}
+              placeholder={`Escribe tu crítica o juicio sobre el ${modeloNombre} (5 a 1000 caracteres)...`}
+              rows={2}
+              className="w-full bg-[#121620] border border-[#1E2638] rounded-xl px-4 py-3 text-xs text-white placeholder-[#94A3B8]/60 focus:outline-none focus:border-[#0096D6] resize-none transition-colors"
+            />
             <button
               type="submit"
               disabled={!esValido || cargando}
-              className={`p-2 rounded-lg font-medium text-white transition-all ${
-                esValido && !cargando
-                  ? 'bg-emerald-600 hover:bg-emerald-500 shadow-md shadow-emerald-900/30'
-                  : 'bg-slate-700/50 text-slate-500 cursor-not-allowed'
+              className="absolute right-2.5 bottom-2.5 bg-[#0096D6] hover:bg-[#0080B8] disabled:bg-[#1E2638] disabled:text-[#94A3B8]/40 text-white px-4 py-2 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 shadow-md shadow-[#0096D6]/20"
+            >
+              <span>Veredicto</span>
+              <Send className="w-3.5 h-3.5" />
+            </button>
+          </div>
+
+          <div className="flex items-center justify-between text-[11px] text-[#94A3B8] px-1">
+            <span>
+              Restricción estricta: entre <strong className="text-white">5</strong> y{' '}
+              <strong className="text-white">1000</strong> caracteres.
+            </span>
+            <span
+              className={`font-mono ${
+                len > 1000 || (len > 0 && len < 5) ? 'text-[#E00034]' : 'text-[#0096D6]'
               }`}
             >
-              <Send className="w-4 h-4" />
-            </button>
+              {len} / 1000
+            </span>
           </div>
         </form>
       </div>
     </div>
   );
 }
-

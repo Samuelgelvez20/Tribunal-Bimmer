@@ -1,14 +1,19 @@
 const API_BASE = '/api';
 
-export async function getJugadores() {
-  const res = await fetch(`${API_BASE}/jugadores`);
-  if (!res.ok) throw new Error('Error al cargar la lista de jugadores');
+export async function getModelos() {
+  const res = await fetch(`${API_BASE}/modelos`);
+  if (!res.ok) throw new Error('Error al cargar la lista de modelos de BMW');
   return res.json();
 }
 
-export async function getOpiniones(jugadorId = null, sentimiento = null) {
+// Alias compatible
+export async function getJugadores() {
+  return getModelos();
+}
+
+export async function getOpiniones(modeloId = null, sentimiento = null) {
   const params = new URLSearchParams();
-  if (jugadorId && jugadorId !== 'todos') params.append('jugador_id', jugadorId);
+  if (modeloId && modeloId !== 'todos') params.append('modelo_id', modeloId);
   if (sentimiento && sentimiento !== 'todos') params.append('sentimiento', sentimiento);
   
   const res = await fetch(`${API_BASE}/opiniones?${params.toString()}`);
@@ -16,12 +21,13 @@ export async function getOpiniones(jugadorId = null, sentimiento = null) {
   return res.json();
 }
 
-export async function analizarOpinion(jugadorId, textoOpinion, apiKey = null, modelo = null) {
+export async function analizarOpinion(modeloId, textoOpinion, apiKey = null, modelo = null) {
   const res = await fetch(`${API_BASE}/opiniones/analizar`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      jugador_id: jugadorId,
+      modelo_id: modeloId,
+      jugador_id: modeloId,
       texto_opinion: textoOpinion,
       api_key: apiKey,
       modelo: modelo
@@ -34,4 +40,3 @@ export async function analizarOpinion(jugadorId, textoOpinion, apiKey = null, mo
   }
   return data;
 }
-
