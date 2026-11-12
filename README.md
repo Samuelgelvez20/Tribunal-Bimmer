@@ -1,5 +1,17 @@
 # Tribunal Bimmer 🏁🏎️
 **Sistema Inteligente de Análisis y Percepción de Modelos BMW**
+
+<p align="center">
+  <img src="https://img.shields.io/badge/Status-Completado-success?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/Version-v1.0.0-blue?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/Python-3.11+-3776AB?style=for-the-badge&logo=python&logoColor=white" />
+  <img src="https://img.shields.io/badge/FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white" />
+  <img src="https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" />
+  <img src="https://img.shields.io/badge/Pytest-0A9EDC?style=for-the-badge&logo=pytest&logoColor=white" />
+  <img src="https://img.shields.io/badge/SOLID_Principles-darkgreen?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge" />
+</p>
+
 *Desarrollo de Software Asistido por Inteligencia Artificial y Automatización Inteligente*
 
 ---
@@ -112,3 +124,34 @@ Casos cubiertos:
 
 2. **Diferenciación entre Mixto y Neutro:**
    Un aficionado que elogia el chasis y la respuesta de un BMW M pero lamenta los costes de mantenimiento o la brusquedad de la transmisión expresa un sentimiento `mixto`. El sistema evita clasificar opiniones con conflicto o contraste como `neutro`, reservando esta última categoría exclusivamente para comentarios puramente fácticos o técnicos (ej. cilindrada, caballos, año o tipo de chasis).
+
+---
+
+## 📡 6. Documentación de la API REST (FastAPI)
+
+El backend de **Tribunal Bimmer** expone una API REST moderna con validación estricta en tiempo de ejecución (Pydantic v2). La documentación interactiva Swagger está disponible en .
+
+### Endpoints Principales:
+
+| Método | Endpoint | Descripción | Payload / Query | Código HTTP |
+|---|:---:|---|---|:---:|
+|  |  | Retorna catálogo de modelos BMW M con especificaciones | Filtros opcionales: ,  |  |
+|  |  | Ficha técnica y métricas agregadas de un modelo | ID del modelo (ej. ) |  |
+|  |  | Clasificación semántica con LLM y análisis de sentimiento |  |  |
+|  |  | Listado de percepciones y análisis históricos | Filtros por ,  |  |
+|  |  | Resumen analítico de sentimiento y distribución | — |  |
+
+---
+
+## 👥 7. Trabajo Colaborativo y Git Flow
+
+El ciclo de desarrollo implementó buenas prácticas de ingeniería:
+- **Estrategia de Ramas:** Separación limpia de componentes en ramas dedicadas (, , , ) integradas a  y estabilizadas en .
+- **Calidad de Código y Pruebas:** Pruebas unitarias de regresión ejecutadas con  antes de cada integración.
+- **Conventional Commits:** Trazabilidad semántica (, , , ).
+
+---
+
+## 📄 8. Licencia
+
+Distribuido bajo la Licencia **MIT** — consulta el archivo [LICENSE](LICENSE) para más información.
